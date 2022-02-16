@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Pliki źródłowe">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\RayTracing.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RT\Material.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utils\VecStuff.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Utils\SurfaceWrapper.h" />
+    <ClInclude Include="src\Utils\asserts.h" />
+    <ClInclude Include="src\RT\Ray.h" />
+    <ClInclude Include="src\RT\Camera.h" />
+    <ClInclude Include="src\RT\Primitives\Sphere.h" />
+    <ClInclude Include="src\RT\Primitives\Hittable.h" />
+    <ClInclude Include="src\RT\RayTracer.h" />
+    <ClInclude Include="src\RT\Primitives\HitVector.h" />
+    <ClInclude Include="src\Utils\VecStuff.h" />
+    <ClInclude Include="src\RT\Material.h" />
+    <ClInclude Include="src\Utils\thread_pool.hpp" />
+    <ClInclude Include="src\RT\shade.h" />
+  </ItemGroup>
+</Project>
