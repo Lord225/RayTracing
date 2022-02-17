@@ -60,7 +60,7 @@ def trace(surf: np.ndarray, camera: Camera, world, samples, bounces):
 
         cv.imshow("RT Demo (Python)", surf[:, :, [2, 1, 0]]/(samples+1))
         cv.waitKey(1)
-        
+    return surf
 
 
 

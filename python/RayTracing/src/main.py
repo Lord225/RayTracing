@@ -28,7 +28,7 @@ def main():
     print("Starting")
 
     start = time.time()
-    ray_tracer.engine.trace(img, camera, world, SAMPLES, BOUNCES)
+    img = ray_tracer.engine.trace(img, camera, world, SAMPLES, BOUNCES)
     end = time.time()
 
 
