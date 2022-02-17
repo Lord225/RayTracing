@@ -14,14 +14,14 @@ BOUNCES = 5
 
 def main():
     
-    cv.namedWindow(WINDOW_NAME, cv.WINDOW_AUTOSIZE)
+    cv.namedWindow(WINDOW_NAME, cv.WINDOW_KEEPRATIO)
 
     camera = ray_tracer.camera.Camera(np.array([-1.5,0,0]), np.array([-1, 0.0, 0.0]), SIZE[1]/SIZE[0], 120)
     img = np.zeros(SIZE)
     world = Array(
         [
-            Sphere(np.array([0, 0, 0]), 0.4, material.Diffuse([0.7, 0.3, 0.3])),
-            Sphere(np.array([0, 100.3, 0]), 100, material.Diffuse([0.21, 0.37, 0.69]))
+            Sphere(np.array([0, 0, 0]), 0.5, material.Diffuse([0.7, 0.3, 0.3])),
+            Sphere(np.array([0, 100.5, 0]), 100, material.Diffuse([0.21, 0.37, 0.69]))
         ]
     )
 

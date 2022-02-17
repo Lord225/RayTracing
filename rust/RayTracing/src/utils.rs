@@ -29,7 +29,7 @@ pub fn vec3_to_color(v: &glm::Vec3, scale: f32) -> u32
 
 pub fn rnd_in_unit_sphere(rng: &mut ThreadRng) -> glm::Vec3
 {
-    loop 
+    for _ in 0..2
     {
         let vec = glm::vec3(rng.gen_range(-1.0f32..1.0), rng.gen_range(-1.0f32..1.0), rng.gen_range(-1.0f32..1.0));
         if vec.magnitude_squared() <= 1.0
@@ -37,6 +37,7 @@ pub fn rnd_in_unit_sphere(rng: &mut ThreadRng) -> glm::Vec3
             return vec;
         }
     }
+    return glm::vec3(rng.gen_range(-1.0f32..1.0)*0.87, rng.gen_range(-1.0f32..1.0)*0.87, rng.gen_range(-1.0f32..1.0)*0.87) 
 }
 
 pub fn rnd_on_unit_sphere(rng: &mut ThreadRng) -> glm::Vec3

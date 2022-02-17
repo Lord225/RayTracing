@@ -48,9 +48,9 @@ int main(int argc, char* argv[])
     SDL_CaptureMouse(SDL_bool(true));
 
     const float aspectratio = ((float)pixels.h()) / pixels.w();
-    const float fl = 1.5f;
+    const float fl = 1.3f;
 
-    glm::vec3 camerapos = { -1.0f, 0.0f, 0.0f };
+    glm::vec3 camerapos = { -2.0f, 0.0f, 0.0f };
     glm::vec2 yawpich = { 0.0f, 0.0f };
     glm::vec3 dir_front, dir_right, dir_up;
 
@@ -58,12 +58,12 @@ int main(int argc, char* argv[])
 
     HitVector world;
 
-    world.push_back(std::make_unique<Sphere>(glm::vec3(1, 0, 0), 0.5f, std::make_shared<Diffuse>(glm::vec3(0.7f, 0.3f, 0.3f))));
-    world.push_back(std::make_unique<Sphere>(glm::vec3(1, 0.0, 100.5), 100.00f, std::make_shared<Diffuse>(glm::vec3(0.21, 0.37, 0.69))));
-    world.push_back(std::make_unique<Sphere>(glm::vec3(1, -1, 0.0), 0.3, std::make_shared<Metalic>(glm::vec3(0.8f, 0.8f, 0.8f), 0.0f)));
-    world.push_back(std::make_unique<Sphere>(glm::vec3(1, 1, 0.0), 0.4, std::make_shared<Refract>(10.0f)));
+    world.push_back(std::make_unique<Sphere>(glm::vec3(0.0f,  0.0f, 0.0f),   0.5f,    std::make_shared<Diffuse>(glm::vec3(0.7f, 0.3f, 0.3f))));
+    world.push_back(std::make_unique<Sphere>(glm::vec3(0.0f,  0.0f, 100.5f), 100.0f,  std::make_shared<Diffuse>(glm::vec3(0.21, 0.37, 0.69))));
+    world.push_back(std::make_unique<Sphere>(glm::vec3(0.0f, -1.0f, 0.2f),   0.3f,    std::make_shared<Metalic>(glm::vec3(0.8f, 0.8f, 0.8f), 0.0f)));
+    world.push_back(std::make_unique<Sphere>(glm::vec3(0.0f,  1.0f, 0.0f),   0.4f,    std::make_shared<Refract>(10.0f)));
 
-    RayTracer engine(pixels, world, camera, 32, 5);
+    RayTracer engine(pixels, world, camera, 32, 5, 32);
     engine.request_camera_update(camera);
 
     using namespace std::chrono;

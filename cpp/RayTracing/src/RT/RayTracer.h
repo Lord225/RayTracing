@@ -19,7 +19,7 @@ class RayTracer {
     int _iterations = 0;
     int _max_iterations = 0;
     int max_bounces = 3;
-    int max_workers = 8;
+    int max_workers = 1;
 
     using real_milliseconds = std::chrono::duration<double, std::ratio<1, 1000>>;
     real_milliseconds total_render_time = real_milliseconds(0.0);

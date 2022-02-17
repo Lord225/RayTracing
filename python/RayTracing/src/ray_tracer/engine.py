@@ -12,6 +12,7 @@ def sky(ray):
     b = np.array([0.5, 0.7, 1.0])
     return t*a + (1-t)*b
 
+    
 def shade(ray: np.ndarray, world: Hittable, bounces):
     if bounces == 0:
         return np.zeros((3))
