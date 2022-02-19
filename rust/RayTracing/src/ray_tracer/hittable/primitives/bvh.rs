@@ -18,7 +18,7 @@ pub struct Bvh
     tree: Box<BvhTree>,
 }
 
-
+#[allow(dead_code)]
 impl Bvh
 {
     pub fn get_aabb(objects: &[Primitive]) -> AABB
@@ -34,6 +34,7 @@ impl Bvh
         }
         return aabb;
     }
+
     fn recursive(objects: &mut [Primitive]) -> BvhTree
     {
         if objects.len() == 1
