@@ -79,7 +79,7 @@ impl RayTracer
     {
         let data_request = Arc::new((Mutex::new(State::RENDERING), Condvar::new()));
         let data = Arc::new(Mutex::new((surface, 0)));
-        let telemetry = Arc::new(Mutex::new((0, Duration::new(0,0))));
+        let telemetry = Arc::new(Mutex::new((0, Duration::default())));
         let (tx, rx) = mpsc::channel::<RenderEnv>();
 
         let tracer = RayTracer{ request: data_request.clone(), data: data.clone(), render_settings: tx, telemetry: telemetry.clone(), max_samples: max_samples as i32};
@@ -117,8 +117,10 @@ impl RayTracer
                         {
                             if new_env.camera.is_some() || new_env.world.is_some()
                             {
+                                let mut tel = telemetry.lock().unwrap();
                                 locked.1 = 0;
                                 locked.0.par_iter_mut().for_each(|x| *x=[0.0,0.0,0.0].into());
+                                tel.1 = Duration::default();
                             }
 
                             if let Some(_world) = new_env.world
@@ -201,7 +203,13 @@ impl RayTracer
     {
         let guard = self.telemetry.lock().unwrap();
 
-        guard.1.div_f32(guard.0 as f32)
+        if guard.0 != 0
+        {
+            guard.1.div_f32(guard.0 as f32)
+        }
+        else {
+            guard.1
+        }
     }
     pub fn is_done(&self) -> bool
     {

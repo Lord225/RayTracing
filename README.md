@@ -4,8 +4,10 @@ Implemenation of simple RT algorithms in 3 diffrent languages to compare preform
 **TODO**
 
 ## Goal
-Implement RT algorithm with Sphere-Ray intersection that works on seperate threads than window, movable camera and 3 diffrent materials (Diffuse, Reflective and Refractive) using most popular tools and techniques. 
-**TODO**
+Implement RT algorithm with Sphere-Ray intersection that works on seperate threads than window, movable camera and 3 diffrent materials (Diffuse, Reflective and Refractive) using popular tools and techniques:
+* `Cpp` - stl, sdl, glm
+* `Rust` - Rayon, nalgebra-glm, minifb
+* `Python` - numpy, numba, opencv for display 
 
 ## Performance
 
@@ -17,12 +19,13 @@ Summary (`i7 7700k@4.5GHZ`)
 | No Threading | 8.28s  | 11.9s |   XD   |
 | Threading    | 1.76s  | 5.25s | 1974s  |
 
-### Test 2 - 32 Samples 128 Bounces 32'768 Spheres
+
+### Size of workspace
 
 |              |  Rust  |  C++  | Python |
 |--------------|--------|-------|--------|
-| No Threading | x  | x |   x   |
-| Threading    | x  | x |   x   |
+| Size of workspace | 982M | 359M |   257K   |
+| Size of binary    | 400K | 61K + `SDL.dll` | N/A |
 
 ## How painful it was?
 
@@ -32,7 +35,8 @@ Summary (`i7 7700k@4.5GHZ`)
 
 ## Whats next
 
-* Implement ray-triangle intersection with AABB optimalization
+* Implement ray-triangle intersection
+* With BVH optimalization
 * Implement CUDA version (C++ supercharged with compute shaders)
 * Textures / Other material types
-
+* Build C++ version staticly

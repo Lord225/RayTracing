@@ -1,6 +1,9 @@
 use crate::ray_tracer::hittable::{Hittable, HitRecord};
-use super::primitive::Primitive;
+use super::primitive::{Primitive};
+use super::bvh::Bvh;
 
+
+#[derive(Clone, Debug)]
 pub struct Vector
 {
     pub list: Vec<Primitive>
@@ -26,6 +29,12 @@ impl Hittable for Vector
         }
         
         closest_hit
+    }
+
+    fn get_aabb(& self) -> crate::ray_tracer::hittable::AABB 
+    {
+
+        return Bvh::get_aabb(&self.list);
     }
 }
 

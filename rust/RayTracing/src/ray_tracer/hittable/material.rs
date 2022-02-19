@@ -6,7 +6,7 @@ use crate::utils::rnd_on_unit_sphere;
 
 use super::HitRecord;
 
-
+#[derive(Clone, Debug)]
 pub enum Material
 {
     Diffuse

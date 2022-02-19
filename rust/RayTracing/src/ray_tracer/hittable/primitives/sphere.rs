@@ -3,6 +3,7 @@ use nalgebra_glm as glm;
 
 use super::primitive::Primitive;
 
+#[derive(Clone, Debug)]
 pub struct Sphere
 {
     pub origin: glm::Vec3,
@@ -41,6 +42,10 @@ impl Hittable for Sphere
         let norm = (pos-self.origin) / self.radius;
         
         return Some(HitRecord::new(&pos, &norm, root, ray, self.mat.as_ref()));
+    }
+
+    fn get_aabb(&self) -> crate::ray_tracer::hittable::AABB {
+        crate::ray_tracer::hittable::AABB{ min: self.origin.add_scalar(-self.radius), max: self.origin.add_scalar(self.radius)}
     }
 }
 
