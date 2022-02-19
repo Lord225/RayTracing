@@ -21,7 +21,9 @@ def main():
     world = Array(
         [
             Sphere(np.array([0, 0, 0]), 0.5, material.Diffuse([0.7, 0.3, 0.3])),
-            Sphere(np.array([0, 100.5, 0]), 100, material.Diffuse([0.21, 0.37, 0.69]))
+            Sphere(np.array([0, 100.5, 0]), 100, material.Diffuse([0.21, 0.37, 0.69])),
+            Sphere(np.array([0, 0.2, -1]), 0.3, material.Metalic([0.8, 0.8, 0.8])),
+            Sphere(np.array([0, 0, 1]), 0.4, material.Refract(10)),
         ]
     )
 

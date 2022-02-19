@@ -54,9 +54,11 @@ def trace(surf: np.ndarray, camera: Camera, world, samples, bounces):
         uvs = np.reshape(uvs, (-1, 2))
         rays = camera.gen_rays(uvs)
 
-        colors = pool.starmap_async(Shade(world, bounces), enumerate(rays), callback=lambda _: bar.next())
+        colors = pool.starmap_async(Shade(world, bounces), enumerate(rays), callback=lambda _: bar.next()).get()
+        #shade = Shade(world, bounces)
+        #colors = [shade(i, ray) for i, ray in enumerate(rays)]
 
-        colors = np.reshape(np.array(colors.get()), (h, w, 3))
+        colors = np.reshape(np.array(colors), (h, w, 3))
         surf += colors
 
         cv.imshow("RT Demo (Python)", surf[:, :, [2, 1, 0]]/(samples+1))
