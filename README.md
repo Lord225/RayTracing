@@ -6,7 +6,15 @@ Implemenation of simple RT algorithms in 3 diffrent languages to compare preform
 Implement RT algorithm with Sphere-Ray intersection that works on seperate threads than window, movable camera and 3 diffrent materials (Diffuse, Reflective and Refractive) using popular tools and techniques:
 * `Cpp` - stl, sdl, glm
 * `Rust` - Rayon, nalgebra-glm, minifb
-* `Python` - numpy, numba, opencv for display 
+* `Python` - numpy, numba, opencv
+
+## Results
+### CPP
+![cpp](https://user-images.githubusercontent.com/49908210/154814310-3855a67e-09c6-4ff9-a377-056498cbc376.png)
+### RUST
+![rust](https://user-images.githubusercontent.com/49908210/154814313-7e060d5e-ed6b-4a94-a8fa-cc12c47983ad.png)
+### PYTHON
+![python](https://user-images.githubusercontent.com/49908210/154814318-3c9203d1-539e-488c-a439-4c64b16162f3.png)
 
 ## Performance
 
