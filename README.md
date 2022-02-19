@@ -21,7 +21,6 @@ Implement RT algorithm with Sphere-Ray intersection that works on seperate threa
 ### Test 1 - 32 Samples, 5 Bounces, 4 Spheres
 Summary (`i7 7700k@4.5GHZ`)
 
-Performance of language may differ bcs diffrent languages have diffrent camera setup. It should not make a big diffrance. 
 
 |              |  Rust  |  C++  | Python |
 |--------------|--------|-------|--------|
