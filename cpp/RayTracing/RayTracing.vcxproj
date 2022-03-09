@@ -79,7 +79,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)RayTracing\SDL\include;$(SolutionDir)RayTracing\glm;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)RayTracing\SDL\include;$(SolutionDir)RayTracing\glm\glm;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)RayTracing\SDL\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
