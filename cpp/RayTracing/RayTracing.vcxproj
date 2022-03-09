@@ -72,20 +72,21 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>$(SolutionDir)RayTracing\glm;$(SolutionDir)RayTracing\SDL\include;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)RayTracing\SDLlib\lib\x86\</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <LibraryPath>$(SolutionDir)RayTracing\SDLlib\lib\x86\</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SolutionDir)RayTracing\SDL\include;$(SolutionDir)RayTracing\glm\glm;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)RayTracing\SDL\lib\x64;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)RayTracing\SDLlib\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)RayTracing\SDL\include;$(SolutionDir)RayTracing\glm;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)RayTracing\SDL\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)RayTracing\SDL\include;$(SolutionDir)RayTracing\glm\glm;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)RayTracing\SDLlib\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -97,6 +98,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -114,6 +116,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <Profile>true</Profile>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

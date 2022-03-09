@@ -1,6 +1,6 @@
 ﻿#include <iostream>
 #include <glm.hpp>
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include "Utils/SurfaceWrapper.h"
 #include "RT/Camera.h"
 #include "RT/Ray.h"
