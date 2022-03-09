@@ -6,6 +6,7 @@
 #include "RT/Ray.h"
 #include "RT/Primitives/Sphere.h"
 #include "RT/Primitives/HitVector.h"
+#include "RT/RTRenderer.h"
 #include "RT/RayTracer.h"
 #include <random>
 
@@ -63,7 +64,9 @@ int main(int argc, char* argv[])
     world.push_back(std::make_unique<Sphere>(glm::vec3(0.0f, -1.0f, 0.2f),   0.3f,    std::make_shared<Metalic>(glm::vec3(0.8f, 0.8f, 0.8f), 0.0f)));
     world.push_back(std::make_unique<Sphere>(glm::vec3(0.0f,  1.0f, 0.0f),   0.4f,    std::make_shared<Refract>(10.0f)));
 
-    RayTracer engine(pixels, world, camera, 32, 5, 32);
+    RT::GuardedRenderTarget target(std::vector<glm::vec3>(pixels.w()*pixels.h()), pixels.w());
+
+    RayTracer engine(pixels, target, world, camera, 32, 5, 32);
     engine.request_camera_update(camera);
 
     using namespace std::chrono;
@@ -179,21 +182,21 @@ int main(int argc, char* argv[])
             is_done_lock = false;
         }
 
-        if (frame_counter % 10 == 0 && !engine.is_done())
+        if (frame_counter % 10 == 0 && !engine.renderer.is_done())
         {
-            std::cout << "Time per iteration: " << engine.get_time_per_sample().count() << "ms\n";
+            std::cout << "Time per iteration: " << engine.renderer.get_time_per_sample().count() << "ms\n";
         }
 
-        if (engine.is_done() && is_done_lock == false)
+        if (engine.renderer.is_done() && is_done_lock == false)
         {
             is_done_lock = true;
-            std::cout << "Time: " << engine.get_total_render_time().count()/1000.0f << "s\n";
+            std::cout << "Time: " << engine.renderer.get_total_render_time().count()/1000.0f << "s\n";
         }
         
 
         SDL_UpdateWindowSurface(window);
     }
-    engine.stop_render_thread();
+    engine.kill_render_thread();
 
     SDL_DestroyWindow(window);
     SDL_Quit();

@@ -31,5 +31,9 @@ class IHittable
 {
 public:
 	virtual std::optional<Record> intersect(const ray& ray, float min, float max) const = 0;
+
+	IHittable() = default;
+	IHittable(const IHittable&) = default;
+	IHittable& operator=(const IHittable&) = default;
 };
 

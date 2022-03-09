@@ -157,11 +157,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\RT\RTRenderer.cpp" />
     <ClCompile Include="src\RayTracing.cpp" />
     <ClCompile Include="src\RT\Material.cpp" />
+    <ClCompile Include="src\RT\shade.cpp" />
     <ClCompile Include="src\Utils\VecStuff.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\RT\RTRenderer.h" />
     <ClInclude Include="src\RT\Material.h" />
     <ClInclude Include="src\RT\Primitives\HitVector.h" />
     <ClInclude Include="src\RT\Primitives\Hittable.h" />

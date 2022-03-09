@@ -18,7 +18,10 @@ public:
 		origin = pos;
 	}
 
-	ray genray(glm::vec2 uv)
+	Camera(const Camera&) = default;
+	Camera& operator=(const Camera&) = default;
+
+	ray genray(glm::vec2 uv) const
 	{
 		glm::vec4 screenPos = glm::vec4(uv, 1.0f, 1.0f);
 		glm::vec4 worldPos = inverse * screenPos;
