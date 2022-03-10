@@ -52,10 +52,15 @@ fn shade(ray: &Ray, world: &Primitive, max_bouces: usize, rng: &mut ThreadRng) -
 
 pub struct RayTracer
 {
+    // Mutexed varible that keeps track of which thread should acces `data`
     request: Arc<(Mutex<State>, Condvar)>,
+    // Render target and sample count, guarded by mutex 
     data: Arc<Mutex<(Vec<glm::Vec3>, i32)>>,
+    // Stream of new settings for engine
     render_settings: mpsc::Sender<RenderEnv>,
+    // Telemetry with render times and delays
     telemetry: Arc<Mutex<(i32, Duration)>>,
+    // Sample threshold when rendering will end
     max_samples: i32,
 }
 
@@ -96,6 +101,7 @@ impl RayTracer
 
                 loop 
                 {
+                    // Waiting for other threads to read
                     {                        
                         let mut guard = worker_request.lock().unwrap();
                         
@@ -110,6 +116,7 @@ impl RayTracer
                         }
                     }
 
+                    // Updateing world & Rendering
                     {
                         let mut locked = data.lock().unwrap();
                         

@@ -58,7 +58,7 @@ public:
         //std::cout << "(window) Trying Locking" << std::endl;
         std::optional<RT::GuardedRenderTarget::Surf> resource = image.request_asap_surface();
 
-        if (resource)
+        if (resource.has_value())
         {
             //std::cout << "(window) Locked " << std::endl;
             auto surf = std::move(resource.value());

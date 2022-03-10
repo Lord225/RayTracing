@@ -132,7 +132,7 @@ namespace RT
         {
             using namespace std::chrono;
             thread_pool pool(_max_workers);
-            std::cout << "(render) Start" << std::endl;
+            //std::cout << "(render) Start" << std::endl;
             while (should_run)
             {
                 if (_iterations <= _max_iterations && (renderable_world.camera.has_value() && renderable_world.world.has_value()))
@@ -141,7 +141,7 @@ namespace RT
                     const auto& world = renderable_world.world.value();
 
                     {
-                        std::cout << "(render) Locking " << std::endl;
+                        //std::cout << "(render) Locking " << std::endl;
                         GuardedRenderTarget::Surf recources = render_target.request_surface();   // Lock on render_target
                         //std::cout << "(render) Locked" << std::endl;
                         auto start = high_resolution_clock::now();
@@ -163,7 +163,7 @@ namespace RT
                     std::this_thread::yield();
                 }
 
-                //std::cout << std::boolalpha << _update_camera.load() << std::endl;
+                std::cout << std::boolalpha << _update_camera.load() << std::endl;
 
                 if (_update_camera)
                 {
@@ -171,15 +171,15 @@ namespace RT
                         //std::cout << "(render) Locking Camera" << std::endl;
                         GuardedRenderTarget::Surf recources = render_target.request_surface(); // Lock on render_target
                         reset_render_target(recources);
-                        // render_target unlockned.
                         //std::cout << "(render) Unlocking Camera" << std::endl;
-
-                        if (new_camera.has_value()) {
-                            renderable_world.camera = new_camera.value();
-                            new_camera = std::nullopt;
-                        }
-                        _update_camera = false;
+                        // render_target unlockned.
                     }
+                    if (new_camera.has_value()) {
+                        renderable_world.camera = new_camera.value();
+                        new_camera = std::nullopt;
+                    }
+                    _update_camera = false;
+                    
                 }
             }
         }

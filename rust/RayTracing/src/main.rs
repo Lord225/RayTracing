@@ -54,7 +54,7 @@ fn generate_scene<const USE_BVH: bool, const SCENE: usize> () -> Primitive
                 Sphere{origin: [0.0f32, 100.5, 0.0].into(), radius: 100f32,   mat: Box::new(Material::new_diffuse(&[0.21f32, 0.37f32, 0.69f32].into()))}.into(), 
                 Sphere{origin: [0.0f32, 0.2,  -1.0].into(), radius: 0.3,      mat: Box::new(Material::new_metalic(&[0.8f32, 0.8, 0.8].into(), 0.0f32))}.into(),
                 Sphere{origin: [0.0f32, 0.0,   1.0].into(), radius: 0.4,      mat: Box::new(Material::new_refract(10.0f32))}.into() 
-                ]
+            ]
             )
             .into();
 

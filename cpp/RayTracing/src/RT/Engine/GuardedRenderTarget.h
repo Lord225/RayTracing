@@ -10,15 +10,21 @@ namespace RT
 {
     class GuardedRenderTarget
     {
+        enum class ThreadState
+        {
+            RENDERING, // Render thread is writing to buffer 
+            REQUEST,   // Window thread wants to read
+            READING   // Render thread waits for window thread
+        };
+
         std::vector<glm::vec3> surf;     // Resouce
+        std::mutex surf_m;
         size_t img_w;
 
-        std::mutex m;
 
-        std::atomic_bool _ready = false;
-        std::atomic_bool _update_surface;
-
+        ThreadState state = ThreadState::RENDERING;
         std::condition_variable _surface_lock;
+        std::mutex state_m;
     public:
         struct Surf
         {
@@ -33,8 +39,8 @@ namespace RT
             {
                 if (owner != nullptr)
                 {
+                    owner->state = ThreadState::RENDERING;
                     owner->_surface_lock.notify_all();
-                    owner->_ready = false;
                 }
             }
 
@@ -58,16 +64,26 @@ namespace RT
         /// </summary>
         std::optional<Surf> request_asap_surface()
         {
-            std::unique_lock<std::mutex> lk(m);
-            if (_surface_lock.wait_for(lk, std::chrono::milliseconds(10), [&]() { return _ready.load(); }))
+            std::unique_lock<std::mutex> lk_state(state_m);
+            if (_surface_lock.wait_for(lk_state, std::chrono::milliseconds(2), [&]() { return state == ThreadState::READING; }))
             {
-                return Surf(std::ref(surf), img_w, std::move(lk), this);
+                // state == READING, we should be fine to lock on it.
+                std::unique_lock<std::mutex> lk_surf(surf_m);
+                return Surf(std::ref(surf), img_w, std::move(lk_surf), this);
             }
             else
             {
-                _update_surface = true;
-                return {}; // Return None, but requests surf_update
+                if (state == ThreadState::RENDERING)
+                {
+                    state = ThreadState::REQUEST;
+                    _surface_lock.notify_one();
+                }
+                else if (state == ThreadState::REQUEST)
+                {
+                    
+                }
             }
+            return {};
         }
 
         /// <summary>
@@ -75,15 +91,23 @@ namespace RT
         /// </summary>
         Surf request_surface()
         {
-            std::unique_lock<std::mutex> lk(m);
-            if (_update_surface)
+            std::unique_lock<std::mutex> state_lk(state_m);
+            if (state == ThreadState::REQUEST)
             {
-                _update_surface = false;
-                _surface_lock.notify_one();
-                _ready.store(true);
-                _surface_lock.wait(lk); // waits for high priority thread
+                state = ThreadState::READING;
+
+                state_lk.unlock();
+
+                _surface_lock.notify_all();
+                
+                std::unique_lock<std::mutex> state_lk(state_m);
+                _surface_lock.wait(state_lk, [&]() {return state != ThreadState::RENDERING; });
+                state_lk.unlock();
             }
-            return Surf(std::ref(surf), img_w, std::move(lk), nullptr);
+            {
+                std::unique_lock<std::mutex> surf_lk(surf_m);
+                return Surf(std::ref(surf), img_w, std::move(surf_lk), nullptr);
+            }
         }
 
         void stop()
