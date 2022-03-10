@@ -1,103 +1,19 @@
 #pragma once
 #include <thread>
 #include <glm.hpp>
-#include "../Utils/thread_pool.hpp"
-#include "Camera.h"
-#include "Ray.h"
-#include "Primitives/Hittable.h"
+#include "../../Utils/thread_pool.hpp"
+#include "../Camera/Camera.h"
+#include "../Camera/Ray.h"
+#include "../Primitives/Hittable.h"
 #include "shade.h"
-
+#include "GuardedRenderTarget.h"
 
 namespace RT
 {
     struct World
     {
-        std::optional<Camera> camera;
-        std::optional<std::reference_wrapper<IHittable>> world;
-    };
-
-    class GuardedRenderTarget
-    {
-        std::vector<glm::vec3> surf;     // Resouce
-        size_t img_w;
-
-        std::mutex m;
-        
-        std::atomic_bool _ready = false;
-        std::atomic_bool _update_surface;
-
-        std::condition_variable _surface_lock;
-    public:
-        struct Surf
-        {
-            std::vector<glm::vec3>& raw;
-            size_t img_w;
-            Surf(std::reference_wrapper<std::vector<glm::vec3>> surf, size_t img_w, std::unique_lock<std::mutex>&& lk, GuardedRenderTarget * owner) 
-                : raw(surf), img_w(img_w), surf_lock(std::move(lk)), owner(owner) {}
-            
-            Surf(Surf&&) = default;
-            Surf& operator=(Surf&&) = default;
-            ~Surf()
-            {
-                if (owner != nullptr)
-                {
-                    owner->_surface_lock.notify_all();
-                    owner->_ready = false;
-                }
-            }
-
-            glm::vec3& get_pixel(size_t x, size_t y)
-            {
-                return raw[x + img_w * y];
-            }
-
-            size_t w() { return img_w; }
-            size_t h() { return raw.size() / img_w; }
-        private:
-            std::unique_lock<std::mutex> surf_lock; // I swear `raw` is yours only.
-            GuardedRenderTarget* owner;
-        };
-
-        GuardedRenderTarget(std::vector<glm::vec3>&& surf, size_t img_w) : surf(std::move(surf)), img_w(img_w) {}
-
-        /// <summary>
-        /// Function will not aquire resources immidetly, 
-        /// but all other threads will not be able to lock on resources if this function was called
-        /// </summary>
-        std::optional<Surf> request_asap_surface()
-        {
-            std::unique_lock<std::mutex> lk(m);
-            if (_surface_lock.wait_for(lk, std::chrono::milliseconds(10), [&]() { return _ready.load(); }))
-            {
-                return Surf(std::ref(surf), img_w, std::move(lk), this);
-            }
-            else
-            {
-                _update_surface = true;
-                return {}; // Return None, but requests surf_update
-            }
-        }
-
-        /// <summary>
-        /// Function will aqure resources, but it has lower priority than request_asap_surface
-        /// </summary>
-        Surf request_surface()
-        {
-            std::unique_lock<std::mutex> lk(m);
-            if (_update_surface)
-            {
-                _update_surface = false;
-                _surface_lock.notify_one();
-                _ready.store(true);
-                _surface_lock.wait(lk); // waits for high priority thread
-            }
-            return Surf(std::ref(surf), img_w, std::move(lk), nullptr);
-        }
-
-        void stop()
-        {
-            _surface_lock.notify_all();
-        }
+        std::optional<Cam::Camera> camera;
+        std::optional<std::reference_wrapper<Primitives::IHittable>> world;
     };
 
     using real_milliseconds = std::chrono::duration<double, std::ratio<1, 1000>>;
@@ -127,7 +43,7 @@ namespace RT
            
         // Flag for updateing camera
         std::atomic_bool _update_camera;
-        std::optional<Camera> new_camera;
+        std::optional<Cam::Camera> new_camera;
     public:
         bool should_run;
         World renderable_world;
@@ -145,13 +61,13 @@ namespace RT
             render_thread = std::thread([&]() { render_loop(); });
         }
 
-        void request_camera_update(Camera _new_camera)
+        void request_camera_update(Cam::Camera _new_camera)
         {
             new_camera = _new_camera;
             _update_camera = true;
         }
 
-        void request_world_update(IHittable& world)
+        void request_world_update(Primitives::IHittable& world)
         {
             renderable_world.world = world;
         }
@@ -191,7 +107,7 @@ namespace RT
             return { u, v };
         }
 
-        void trace_indexes(GuardedRenderTarget::Surf& surf, int samples, int _bounces, const Camera& camera, const IHittable& world, int from, int to)
+        void trace_indexes(GuardedRenderTarget::Surf& surf, int samples, int _bounces, const Cam::Camera& camera, const Primitives::IHittable& world, int from, int to)
         {
             for (size_t i = from; i < to; i++)
             {
@@ -216,7 +132,7 @@ namespace RT
         {
             using namespace std::chrono;
             thread_pool pool(_max_workers);
-            //std::cout << "(render) Start" << std::endl;
+            std::cout << "(render) Start" << std::endl;
             while (should_run)
             {
                 if (_iterations <= _max_iterations && (renderable_world.camera.has_value() && renderable_world.world.has_value()))
@@ -225,7 +141,7 @@ namespace RT
                     const auto& world = renderable_world.world.value();
 
                     {
-                        //std::cout << "(render) Locking " << std::endl;
+                        std::cout << "(render) Locking " << std::endl;
                         GuardedRenderTarget::Surf recources = render_target.request_surface();   // Lock on render_target
                         //std::cout << "(render) Locked" << std::endl;
                         auto start = high_resolution_clock::now();
@@ -247,6 +163,8 @@ namespace RT
                     std::this_thread::yield();
                 }
 
+                //std::cout << std::boolalpha << _update_camera.load() << std::endl;
+
                 if (_update_camera)
                 {
                     {
@@ -254,14 +172,14 @@ namespace RT
                         GuardedRenderTarget::Surf recources = render_target.request_surface(); // Lock on render_target
                         reset_render_target(recources);
                         // render_target unlockned.
-                    }
-                    //std::cout << "(render) Unlocking Camera" << std::endl;
+                        //std::cout << "(render) Unlocking Camera" << std::endl;
 
-                    if (new_camera.has_value()) {
-                        renderable_world.camera = new_camera.value();
-                        new_camera = std::nullopt;
+                        if (new_camera.has_value()) {
+                            renderable_world.camera = new_camera.value();
+                            new_camera = std::nullopt;
+                        }
+                        _update_camera = false;
                     }
-                    _update_camera = false;
                 }
             }
         }

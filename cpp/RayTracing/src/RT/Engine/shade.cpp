@@ -5,7 +5,7 @@ glm::vec3 sky(const ray& r)
     return glm::mix(glm::vec3(1.0f, 1.0f, 1.0f), { 0.5f, 0.7f, 1.0f }, 0.5f * (glm::normalize(r.dir).y + 1.0f));
 }
 
-glm::vec3 gen_color(const ray& r, const IHittable& world, std::mt19937& random, int depth)
+glm::vec3 gen_color(const ray& r, const Primitives::IHittable& world, std::mt19937& random, int depth)
 {
     if (depth <= 0)
         return { 0.0f, 0.0f, 0.0f };

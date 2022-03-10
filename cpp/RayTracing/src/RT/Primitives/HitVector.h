@@ -3,24 +3,27 @@
 #include <memory>
 #include "Hittable.h"
 
-class HitVector : public IHittable, public std::vector<std::unique_ptr<IHittable>>
+
+namespace Primitives
 {
-public:
-	std::optional<Record> intersect(const ray& ray, float min, float max) const override
+	class HitVector : public IHittable, public std::vector<std::unique_ptr<IHittable>>
 	{
-		float t = max;
-		std::optional<Record> hit = std::nullopt;
-
-		for (const auto& obj : *this)
+	public:
+		std::optional<Record> intersect(const ray& ray, float min, float max) const override
 		{
-			if (auto result = obj->intersect(ray, min, t))
+			float t = max;
+			std::optional<Record> hit = std::nullopt;
+
+			for (const auto& obj : *this)
 			{
-				t = (*result).dis;
-				hit = result;
+				if (auto result = obj->intersect(ray, min, t))
+				{
+					t = (*result).dis;
+					hit = result;
+				}
 			}
+
+			return hit;
 		}
-
-		return hit;
-	}
-};
-
+	};
+}

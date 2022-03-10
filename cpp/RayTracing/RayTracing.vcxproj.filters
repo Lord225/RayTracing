@@ -10,32 +10,30 @@
     <ClCompile Include="src\RayTracing.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="src\RT\Material.cpp">
+    <ClCompile Include="src\RT\Material\Material.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
     <ClCompile Include="src\Utils\VecStuff.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="src\RT\RTRenderer.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RT\shade.cpp">
+    <ClCompile Include="src\RT\Engine\shade.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Utils\SurfaceWrapper.h" />
     <ClInclude Include="src\Utils\asserts.h" />
-    <ClInclude Include="src\RT\Ray.h" />
-    <ClInclude Include="src\RT\Camera.h" />
+    <ClInclude Include="src\RT\Camera\Ray.h" />
+    <ClInclude Include="src\RT\Camera\Camera.h" />
     <ClInclude Include="src\RT\Primitives\Sphere.h" />
     <ClInclude Include="src\RT\Primitives\Hittable.h" />
-    <ClInclude Include="src\RT\RayTracer.h" />
+    <ClInclude Include="src\RT\Engine\RayTracer.h" />
     <ClInclude Include="src\RT\Primitives\HitVector.h" />
     <ClInclude Include="src\Utils\VecStuff.h" />
-    <ClInclude Include="src\RT\Material.h" />
+    <ClInclude Include="src\RT\Material\Material.h" />
     <ClInclude Include="src\Utils\thread_pool.hpp" />
-    <ClInclude Include="src\RT\shade.h" />
-    <ClInclude Include="src\RT\RTRenderer.h" />
+    <ClInclude Include="src\RT\Engine\shade.h" />
+    <ClInclude Include="src\RT\Engine\RTRenderer.h" />
+    <ClInclude Include="src\RT\Engine\GuardedRenderTarget.h" />
   </ItemGroup>
 </Project>

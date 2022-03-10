@@ -1,23 +1,23 @@
 #pragma once
-#include "../Utils/SurfaceWrapper.h"
-#include "Camera.h"
-#include "Ray.h"
-#include "Primitives/Hittable.h"
+#include "../../Utils/SurfaceWrapper.h"
+#include "../Camera/Camera.h"
+#include "../Camera/Ray.h"
+#include "../Primitives/Hittable.h"
+#include "../../Utils/VecStuff.h"
+#include "../../Utils/thread_pool.hpp"
 #include <glm.hpp>
 #include <optional>
 #include <tuple>
 #include <iostream>
 #include <vector>
 #include <random>
-#include "../Utils/VecStuff.h"
-#include "../Utils/thread_pool.hpp"
 #include "RTRenderer.h"
 
 
 class RayTracer {
-    Camera camera;
-    IHittable& world;
-    SurfaceWrapper& pixels;
+    Cam::Camera camera;
+    Primitives::IHittable& world;
+    Utils::SurfaceWrapper& pixels;
     
     RT::GuardedRenderTarget& image;
 
@@ -36,7 +36,7 @@ public:
 
     RT::RTRenderer renderer;
 
-    RayTracer(SurfaceWrapper& pixels, RT::GuardedRenderTarget& render_target, IHittable& world, Camera camera, int _max_iters, int _max_bounces, int _max_workers = 8) :
+    RayTracer(Utils::SurfaceWrapper& pixels, RT::GuardedRenderTarget& render_target, Primitives::IHittable& world, Cam::Camera camera, int _max_iters, int _max_bounces, int _max_workers = 8) :
         camera(camera),
         world(world),
         pixels(pixels),
@@ -72,7 +72,7 @@ public:
 
     }
 
-    void request_camera_update(Camera new_cam)
+    void request_camera_update(Cam::Camera new_cam)
     {
         renderer.request_camera_update(new_cam);
     }

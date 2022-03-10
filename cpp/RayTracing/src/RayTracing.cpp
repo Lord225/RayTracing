@@ -1,13 +1,20 @@
 ﻿#include <iostream>
 #include <glm.hpp>
 #include <SDL.h>
+#include <memory>
 #include "Utils/SurfaceWrapper.h"
-#include "RT/Camera.h"
-#include "RT/Ray.h"
+
+#include "RT/Camera/Camera.h"
+#include "RT/Camera/Ray.h"
+
 #include "RT/Primitives/Sphere.h"
 #include "RT/Primitives/HitVector.h"
-#include "RT/RTRenderer.h"
-#include "RT/RayTracer.h"
+
+#include "RT/Engine/GuardedRenderTarget.h"
+#include "RT/Engine/RayTracer.h"
+
+#include "RT/Material/Material.h"
+
 #include <random>
 
 int SDL_Error_Handle(std::string message = "[ERROR]:")
@@ -42,8 +49,8 @@ int main(int argc, char* argv[])
     if (surf == nullptr)
         return SDL_Error_Handle();
 
-    SurfaceWrapper pixels;
-    if(pixels.setTarget(surf) == SurfaceWrapper::State::ERROR)
+    Utils::SurfaceWrapper pixels;
+    if(pixels.setTarget(surf) == Utils::SurfaceWrapper::State::ERROR)
         return SDL_Error_Handle();
 
     SDL_CaptureMouse(SDL_bool(true));
@@ -55,8 +62,10 @@ int main(int argc, char* argv[])
     glm::vec2 yawpich = { 0.0f, 0.0f };
     glm::vec3 dir_front, dir_right, dir_up;
 
-    Camera camera(camerapos, { 1.0f, 0.0f, 0.0f }, aspectratio, fl);
+    Cam::Camera camera(camerapos, { 1.0f, 0.0f, 0.0f }, aspectratio, fl);
 
+    using namespace Primitives;
+    using namespace Mat;
     HitVector world;
 
     world.push_back(std::make_unique<Sphere>(glm::vec3(0.0f,  0.0f, 0.0f),   0.5f,    std::make_shared<Diffuse>(glm::vec3(0.7f, 0.3f, 0.3f))));
@@ -174,7 +183,7 @@ int main(int argc, char* argv[])
             dir_right = glm::normalize(glm::cross(dir_front, {0.0f, 0.0f, 1.0f}));
             dir_up = glm::normalize(glm::cross(dir_right, dir_front));
 
-            camera = Camera(camerapos, dir_front, aspectratio, fl);
+            camera = Cam::Camera(camerapos, dir_front, aspectratio, fl);
 
             engine.request_camera_update(camera);
 
